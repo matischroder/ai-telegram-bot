@@ -1,18 +1,20 @@
-from bot import bot_logic  # Import your bot's logic from bot_logic.py
-from telegram.ext import Updater
+import os
+from bot.bot_logic import start, help_command, enano, matias, chatbot
+from telegram.ext import CommandHandler, Application
+
+TELEGRAM_API_TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
 
 
 def main():
-    # Initialize the bot
-    updater = Updater(token=bot_logic.TOKEN, use_context=True)
-    dispatcher = updater.dispatcher
+    app = Application.builder().token(TELEGRAM_API_TOKEN).build()
 
-    # Register your bot's handlers
-    bot_logic.register_handlers(dispatcher)
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("enano", enano))
+    app.add_handler(CommandHandler("matias", matias))
+    app.add_handler(CommandHandler("ai", chatbot))
 
-    # Start the bot
-    updater.start_polling()
-    updater.idle()
+    app.run_polling()
 
 
 if __name__ == "__main__":
