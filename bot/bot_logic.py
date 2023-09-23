@@ -1,31 +1,57 @@
+import logging
+
+from telegram import ForceReply, Update
 from telegram.ext import (
-    CommandHandler,
-    MessageHandler,
-    Filters,
-    CallbackContext,
-    Updater,
+    ContextTypes,
 )
+from .chatbot import ChatBot
+
+ai_bot = ChatBot()
+
+# Enable logging
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
+logger = logging.getLogger(__name__)
 
 
-# Define your bot's commands and message handlers
-def start(update: Updater, context: CallbackContext):
+# Define a few command handlers. These usually take the two arguments update and
+# context.
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Send a message when the command /start is issued."""
     user = update.effective_user
-    update.message.reply_markdown_v2(f"Hi {user.mention_markdown_v2()}!")
+    await update.message.reply_html(
+        rf"Hi {user.mention_html()}!",
+        reply_markup=ForceReply(selective=True),
+    )
 
 
-def echo(update: Updater, context: CallbackContext):
-    user_message = update.message.text
-    response = process_user_message(user_message)
-    update.message.reply_text(response)
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Send a message when the command /help is issued."""
+    await update.message.reply_text(
+        "Para utilizar el bot, escriba /ai y luego tu mensaje"
+    )
 
 
-# Register your handlers
-def register_handlers(dispatcher):
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Echo the user message."""
+    await update.message.reply_text(update.message.text)
 
 
-# Other bot logic and functions here
-def process_user_message(message):
-    # Process the user's message and generate a response
-    return "Your response here..."
+async def enano(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Echo the user message."""
+    await update.message.reply_text("puto")
+
+
+async def matias(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Echo the user message."""
+    await update.message.reply_text("crack")
+
+
+async def chatbot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    message_text = update.message.text[len("/ai ") :]
+    response = ai_bot.chat(message_text)
+    await update.message.reply_text(response)
