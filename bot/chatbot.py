@@ -19,8 +19,11 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 class ChatBot:
     def __init__(
         self,
-        llm: OpenAI = OpenAI(temperature=0.2, model="gpt-3.5-turbo"),
+        llm: OpenAI = OpenAI(temperature=0.1, model="gpt-3.5-turbo"),
     ) -> None:
+        # check if ./data/storage exists
+        if not os.path.exists("./data/storage"):
+            os.makedirs("./data/storage", exist_ok=True)
         _vector_store = FaissVectorStore.from_persist_dir(f"./data/storage")
         _storage_context = StorageContext.from_defaults(
             vector_store=_vector_store,
@@ -40,7 +43,7 @@ class ChatBot:
 
         _all_tools = [query_engine_tool]
 
-        system_prompt = "Sos el asistente virtual un grupo de telegram"
+        system_prompt = "Sos el asistente virtual un grupo de telegram que tiene como contexto el whitepaper de bitcoin traducido al español"
 
         self._agent = OpenAIAgent.from_tools(
             _all_tools,
@@ -72,6 +75,8 @@ class ChatBot:
             #     "text": response.response,
             #     "sources": self.get_sources_url(response.source_nodes),
             # }
+            sources = self.get_sources_url(response.source_nodes)
+            print(sources)
             return response.response
 
         except Exception as e:
