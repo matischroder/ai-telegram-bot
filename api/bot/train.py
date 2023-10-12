@@ -19,7 +19,6 @@ faiss_index = faiss.IndexFlatL2(d)
 
 def train_bot():
     documents = SimpleDirectoryReader("./data/md", exclude=["**/*.png"]).load_data()
-    vector_store = FaissVectorStore(faiss_index=faiss_index)
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-    index = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+    index = VectorStoreIndex.from_documents(documents)
+    index.set_index_id("vector_index")
     index.storage_context.persist("./data/storage")

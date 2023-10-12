@@ -47,12 +47,11 @@ async def chatbot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # function that handles a file sent by an user
 async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
+        print("update", update.effective_user.id, context.bot_data["whitelist"])
         if update.effective_user.id not in context.bot_data["whitelist"]:
             await update.message.reply_text("No eres un usuario autorizado")
-            return
         if update.message.document.mime_type != "application/pdf":
             await update.message.reply_text("El archivo no es un pdf")
-            return
 
         file = await update.message.document.get_file()
 

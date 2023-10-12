@@ -23,15 +23,14 @@ class ChatBot:
     ) -> None:
         # check if ./data/storage exists
         if not os.path.exists("./data/storage"):
+            print("here")
             os.makedirs("./data/storage", exist_ok=True)
-        _vector_store = FaissVectorStore.from_persist_dir(f"./data/storage")
         _storage_context = StorageContext.from_defaults(
-            vector_store=_vector_store,
             persist_dir=f"./data/storage",
         )
         _index = load_index_from_storage(storage_context=_storage_context)
         _memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
-        similarity_top_k = 7
+        similarity_top_k = 5
         _retriever = VectorIndexRetriever(
             index=_index, similarity_top_k=similarity_top_k
         )
@@ -43,7 +42,7 @@ class ChatBot:
 
         _all_tools = [query_engine_tool]
 
-        system_prompt = "Sos el asistente virtual un grupo de telegram que tiene como contexto el whitepaper de bitcoin traducido al español"
+        system_prompt = "Sos el asistente virtual un grupo de telegram que tiene como contexto un documento"
 
         self._agent = OpenAIAgent.from_tools(
             _all_tools,
@@ -71,10 +70,6 @@ class ChatBot:
             chat_history = self._chat_history
             chat_history.append(ChatMessage(role="user", content=input_text))
             response = self._agent.chat(input_text)
-            # response = {
-            #     "text": response.response,
-            #     "sources": self.get_sources_url(response.source_nodes),
-            # }
             sources = self.get_sources_url(response.source_nodes)
             print(sources)
             return response.response
