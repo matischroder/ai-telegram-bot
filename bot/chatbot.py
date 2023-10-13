@@ -1,4 +1,5 @@
-import os, openai
+import os
+import openai
 
 from llama_index import (
     load_index_from_storage,
