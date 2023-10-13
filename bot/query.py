@@ -6,7 +6,7 @@ from llama_index import (
 
 
 def query(query):
-    storage_context = StorageContext.from_defaults(persist_dir="./api/data/storage")
+    storage_context = StorageContext.from_defaults(persist_dir="./data/storage")
     index = load_index_from_storage(
         storage_context=storage_context, index_id="vector_index"
     )

@@ -21,4 +21,4 @@ def train_bot():
     documents = SimpleDirectoryReader("./data/md", exclude=["**/*.png"]).load_data()
     index = VectorStoreIndex.from_documents(documents)
     index.set_index_id("vector_index")
-    index.storage_context.persist("./api/data/storage")
+    index.storage_context.persist("./data/storage")

@@ -21,12 +21,12 @@ class ChatBot:
         self,
         llm: OpenAI = OpenAI(temperature=0.1, model="gpt-3.5-turbo"),
     ) -> None:
-        # check if ./api/data/storage exists
-        if not os.path.exists("./api/data/storage"):
+        # check if ./data/storage exists
+        if not os.path.exists("./data/storage"):
             print("here")
-            os.makedirs("./api/data/storage", exist_ok=True)
+            os.makedirs("./data/storage", exist_ok=True)
         _storage_context = StorageContext.from_defaults(
-            persist_dir=f"./api/data/storage",
+            persist_dir=f"./data/storage",
         )
         _index = load_index_from_storage(storage_context=_storage_context)
         _memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
