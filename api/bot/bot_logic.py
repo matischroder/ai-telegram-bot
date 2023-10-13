@@ -63,8 +63,8 @@ async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         await file.download_to_drive(custom_path=f"data/pdfs/file.pdf")
         convert_pdf_to_md()
 
-        for filename in os.listdir("data/storage"):
-            os.remove(f"data/storage/{filename}")
+        for filename in os.listdir("api/data/storage"):
+            os.remove(f"api/data/storage/{filename}")
 
         train_bot()
 
