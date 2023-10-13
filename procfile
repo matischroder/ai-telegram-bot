@@ -1,1 +1,1 @@
-worker: python api/index.py
+worker: python index.py
