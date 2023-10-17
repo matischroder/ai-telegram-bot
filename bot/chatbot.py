@@ -24,8 +24,14 @@ class ChatBot:
     ) -> None:
         # check if ./data/storage exists
         if not os.path.exists("./data/storage"):
-            print("here")
             os.makedirs("./data/storage", exist_ok=True)
+        if not os.path.exists("./data/pdfs"):
+            os.makedirs("./data/pdfs", exist_ok=True)
+        if not os.path.exists("./data/latest"):
+            os.makedirs("./data/latest", exist_ok=True)
+        if not os.path.exists("./data/storage/docstore.json"):
+            return
+
         _storage_context = StorageContext.from_defaults(
             persist_dir=f"./data/storage",
         )
