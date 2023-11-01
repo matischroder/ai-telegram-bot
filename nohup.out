@@ -1,0 +1,4 @@
+  File "index.py", line 29
+    print(f"An error occurred: {e}")
+                                  ^
+SyntaxError: invalid syntax
