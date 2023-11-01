@@ -31,7 +31,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
     await update.message.reply_text(
-        "Para utilizar el bot, escriba /ai y luego tu mensaje"
+        "Para utilizar el bot, escriba /query y luego tu mensaje"
     )
 
 
