@@ -10,12 +10,13 @@ from .train import train_bot
 from .query import query
 
 ai_bot = ChatBot()
+default_whitelist = ["", "jaimer0", "jinmv"]
 
 # Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
-# set higher logging level for httpx to avoid all GET and POST requests being logged
+# Set a higher logging level for httpx to avoid all GET and POST requests being logged
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
@@ -23,35 +24,25 @@ logger = logging.getLogger(__name__)
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send a message when the command /start is issued."""
-    user = update.effective_user
-
-
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
-    await update.message.reply_text(
-        "Para utilizar el bot, escriba /query y luego tu mensaje"
-    )
+    await update.message.reply_text("To use the bot, type /query and then your message")
 
 
-async def chatbot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    message_text = update.message.text[len("/ai ") :]
-    await context.bot.send_chat_action(
-        chat_id=update.effective_chat.id, action="typing"
-    )
-    response = ai_bot.chat(message_text)
-    await update.message.reply_text(response)
-
-
-# function that handles a file sent by an user
+# Function that handles a file sent by a user
 async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
-        print("update", update.effective_user.id, context.bot_data["whitelist"])
-        if update.effective_user.id not in context.bot_data["whitelist"]:
-            await update.message.reply_text("No eres un usuario autorizado")
+        if "whitelist" not in context.bot_data:
+            context.bot_data["whitelist"] = default_whitelist
+        logger.info(
+            "update %s %s",
+            update.effective_user.username,
+            context.bot_data["whitelist"],
+        )
+        if update.effective_user.username not in context.bot_data["whitelist"]:
+            return await update.message.reply_text("You are not an authorized user")
         if update.message.document.mime_type != "application/pdf":
-            await update.message.reply_text("El archivo no es un pdf")
+            return await update.message.reply_text("The file is not a PDF")
 
         file = await update.message.document.get_file()
 
@@ -68,27 +59,36 @@ async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
         train_bot()
 
-        await update.message.reply_text("El bot ha sido entrenado")
+        await update.message.reply_text("The bot has been trained")
     except Exception as e:
-        print(e)
-        await update.message.reply_text("Error al entrenar el bot")
+        logger.error(e)
+        await update.message.reply_text("Error training the bot")
 
 
-# add the admin to the whitelist automatically
+# Add the admin to the whitelist automatically
 async def add_admin_to_whitelist(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
-    # create the whitelist if it doesn't exist
+    message_text = update.message.text[len("/add_admin ") :]
+    logger.info(update.effective_user)
+    logger.info(message_text)
+
+    # Create the whitelist if it doesn't exist
     if "whitelist" not in context.bot_data:
-        context.bot_data["whitelist"] = []
-    if update.effective_user.id not in context.bot_data["whitelist"]:
-        context.bot_data["whitelist"].append(update.effective_user.id)
-        await update.message.reply_text("Usuario añadido a la whitelist")
+        context.bot_data["whitelist"] = default_whitelist
+    logger.info(context.bot_data["whitelist"])
+    if message_text == "":
+        return await update.message.reply_text(
+            "Please enter a username after the command"
+        )
+    if message_text not in context.bot_data["whitelist"]:
+        context.bot_data["whitelist"].append(message_text)
+        return await update.message.reply_text("User added to the whitelist")
     else:
-        await update.message.reply_text("El usuario ya está en la whitelist")
+        return await update.message.reply_text("The user is already in the whitelist")
 
 
-# function that query the bot
+# Function that queries the bot
 async def query_bot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         message_text = update.message.text[len("/query ") :]
@@ -96,7 +96,18 @@ async def query_bot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             chat_id=update.effective_chat.id, action="typing"
         )
         response = query(message_text)
+        logger.info("%s %s", update.effective_user.username, message_text)
+        logger.info("Chatbot %s", response)
         await update.message.reply_text(response)
     except Exception as e:
-        print(e)
-        await update.message.reply_text("Error al consultar el bot")
+        logger.error(e)
+        await update.message.reply_text("Error, please try again later")
+
+
+async def chatbot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    message_text = update.message.text[len("/ai ") :]
+    await context.bot.send_chat_action(
+        chat_id=update.effective_chat.id, action="typing"
+    )
+    response = ai_bot.chat(message_text)
+    await update.message.reply_text(response)
