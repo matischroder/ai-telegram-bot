@@ -32,34 +32,35 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 # Function that handles a file sent by a user
 async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
-        if "whitelist" not in context.bot_data:
-            context.bot_data["whitelist"] = default_whitelist
-        logger.info(
-            "update %s %s",
-            update.effective_user.username,
-            context.bot_data["whitelist"],
-        )
-        if update.effective_user.username not in context.bot_data["whitelist"]:
-            return await update.message.reply_text("You are not an authorized user")
-        if update.message.document.mime_type != "application/pdf":
-            return await update.message.reply_text("The file is not a PDF")
+        if update.message.chat.type == "private":
+            if "whitelist" not in context.bot_data:
+                context.bot_data["whitelist"] = default_whitelist
+            logger.info(
+                "update %s %s",
+                update.effective_user.username,
+                context.bot_data["whitelist"],
+            )
+            if update.effective_user.username not in context.bot_data["whitelist"]:
+                return await update.message.reply_text("You are not an authorized user")
+            if update.message.document.mime_type != "application/pdf":
+                return await update.message.reply_text("The file is not a PDF")
 
-        file = await update.message.document.get_file()
+            file = await update.message.document.get_file()
 
-        for filename in os.listdir("data/pdfs"):
-            os.remove(f"data/pdfs/{filename}")
-        for filename in os.listdir("data/md"):
-            os.remove(f"data/md/{filename}")
+            for filename in os.listdir("data/pdfs"):
+                os.remove(f"data/pdfs/{filename}")
+            for filename in os.listdir("data/md"):
+                os.remove(f"data/md/{filename}")
 
-        await file.download_to_drive(custom_path=f"data/pdfs/file.pdf")
-        convert_pdf_to_md()
+            await file.download_to_drive(custom_path=f"data/pdfs/file.pdf")
+            convert_pdf_to_md()
 
-        for filename in os.listdir("data/storage"):
-            os.remove(f"data/storage/{filename}")
+            for filename in os.listdir("data/storage"):
+                os.remove(f"data/storage/{filename}")
 
-        train_bot()
+            train_bot()
 
-        await update.message.reply_text("The bot has been trained")
+            await update.message.reply_text("The bot has been trained")
     except Exception as e:
         logger.error(e)
         await update.message.reply_text("Error training the bot")
