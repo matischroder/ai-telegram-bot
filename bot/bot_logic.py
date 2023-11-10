@@ -89,9 +89,9 @@ async def add_admin_to_whitelist(
 
 
 # Function that queries the bot
-async def query_bot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def ai(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
-        message_text = update.message.text[len("/query ") :]
+        message_text = update.message.text[len("/ai ") :]
         await context.bot.send_chat_action(
             chat_id=update.effective_chat.id, action="typing"
         )

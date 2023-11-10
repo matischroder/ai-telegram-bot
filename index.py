@@ -4,7 +4,7 @@ from bot.bot_logic import (
     chatbot,
     file_handler,
     add_admin_to_whitelist,
-    query_bot,
+    ai,
 )
 from telegram.ext import CommandHandler, Application, MessageHandler, filters
 
@@ -15,10 +15,10 @@ def main():
     try:
         app = Application.builder().token(TELEGRAM_API_TOKEN).build()
         app.add_handler(CommandHandler("help", help_command))
-        app.add_handler(CommandHandler("ai", chatbot))
+        # app.add_handler(CommandHandler("ai", chatbot))
         app.add_handler(MessageHandler(filters.ATTACHMENT, file_handler))
         app.add_handler(CommandHandler("add_admin", add_admin_to_whitelist))
-        app.add_handler(CommandHandler("query", query_bot))
+        app.add_handler(CommandHandler("ai", ai))
 
         app.run_polling()
     except Exception as e:
