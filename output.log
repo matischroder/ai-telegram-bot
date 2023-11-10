@@ -1,0 +1,128 @@
+nohup: ignoring input
+2023-10-17 13:50:37,164 - telegram.ext.Application - INFO - Application started
+2023-10-17 13:50:37,788 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+2023-10-17 13:51:50,904 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+2023-10-17 13:52:00,361 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+2023-10-17 13:52:09,051 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+2023-10-17 13:52:25,496 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+2023-10-17 13:53:46,553 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+2023-10-20 10:52:40,151 - telegram.ext.Updater - ERROR - Error while getting Updates: httpx.ReadError: 
+2023-10-20 10:52:40,162 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/usr/lib/python3.9/asyncio/selector_events.py", line 856, in _read_ready__data_received
+    data = self._sock.recv(self.max_size)
+ConnectionResetError: [Errno 104] Connection reset by peer
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_exceptions.py", line 10, in map_exceptions
+    yield
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_backends/anyio.py", line 34, in read
+    return await self._stream.receive(max_bytes=max_bytes)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/anyio/streams/tls.py", line 196, in receive
+    data = await self._call_sslobject_method(self._ssl_object.read, max_bytes)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/anyio/streams/tls.py", line 138, in _call_sslobject_method
+    data = await self.transport_stream.receive()
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/anyio/_backends/_asyncio.py", line 1212, in receive
+    raise self._protocol.exception
+anyio.BrokenResourceError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_async/connection.py", line 96, in handle_async_request
+    return await self._connection.handle_async_request(request)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_async/http11.py", line 121, in handle_async_request
+    raise exc
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_async/http11.py", line 99, in handle_async_request
+    ) = await self._receive_response_headers(**kwargs)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_async/http11.py", line 164, in _receive_response_headers
+    event = await self._receive_event(timeout=timeout)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_async/http11.py", line 200, in _receive_event
+    data = await self._network_stream.read(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_backends/anyio.py", line 36, in read
+    return b""
+  File "/usr/lib/python3.9/contextlib.py", line 135, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ReadError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 219, in do_request
+    res = await self._client.request(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/usr/lib/python3.9/contextlib.py", line 135, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ReadError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/ext/_updater.py", line 628, in _network_loop_retry
+    if not await action_cb():
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/ext/_updater.py", line 333, in polling_action_cb
+    raise exc
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/ext/_updater.py", line 322, in polling_action_cb
+    updates = await self.bot.get_updates(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/ext/_extbot.py", line 553, in get_updates
+    updates = await super().get_updates(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/_bot.py", line 394, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/_bot.py", line 3542, in get_updates
+    await self._post(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/_bot.py", line 482, in _post
+    return await self._do_post(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/ext/_extbot.py", line 335, in _do_post
+    return await super()._do_post(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/_bot.py", line 510, in _do_post
+    return await request.post(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 288, in _request_wrapper
+    raise exc
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 243, in do_request
+    raise NetworkError(f"httpx.{err.__class__.__name__}: {err}") from err
+telegram.error.NetworkError: httpx.ReadError: 
+2023-10-21 12:06:20,943 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+2023-10-25 18:57:17,263 - llama_index.indices.loading - INFO - Loading indices with ids: ['vector_index']
+An error occurred: Timed out
+2023-10-26 14:54:54,996 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Application:6602055473:update_fetcher' coro=<Application._update_fetcher() running at /home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/ext/_application.py:1101> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x7fcf8e03e430>()]>>
+Exception ignored in: <coroutine object Application._update_fetcher at 0x7fcf8e9f06c0>
+Traceback (most recent call last):
+  File "/home/joosehernandezzz1995/ai-telegram-bot/venv/lib/python3.9/site-packages/telegram/ext/_application.py", line 1101, in _update_fetcher
+    update = await self.update_queue.get()
+  File "/usr/lib/python3.9/asyncio/queues.py", line 168, in get
+    getter.cancel()  # Just in case getter is not done yet.
+  File "/usr/lib/python3.9/asyncio/base_events.py", line 746, in call_soon
+    self._check_closed()
+  File "/usr/lib/python3.9/asyncio/base_events.py", line 510, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
