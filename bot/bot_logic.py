@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 # context.
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
-    await update.message.reply_text("To use the bot, type /query and then your message")
+    await update.message.reply_text("To use the bot, type /ai and then your message")
 
 
 # Function that handles a file sent by a user
