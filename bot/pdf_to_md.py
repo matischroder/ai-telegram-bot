@@ -1,23 +1,40 @@
 import os
-import aspose.words as aw
+import pdfplumber
 
-# Define the input and output directories
+# Directorios de entrada y salida
 input_directory = "./data/pdfs/"
 output_directory = "./data/md/"
 
-# Ensure the output directory exists
+# Crear el directorio de salida si no existe
 os.makedirs(output_directory, exist_ok=True)
 
 
-# Loop through PDF files in the input directory
 def convert_pdf_to_md():
     for filename in os.listdir(input_directory):
-        if filename.endswith(".pdf"):
+        if filename.lower().endswith(".pdf"):  # Verificar extensión PDF
             input_path = os.path.join(input_directory, filename)
             output_filename = os.path.splitext(filename)[0] + ".md"
             output_path = os.path.join(output_directory, output_filename)
 
-            # Use pdfminer.high_level.extract_text to extract text from PDF
-            doc = aw.Document(input_path)
+            try:
+                # Leer el contenido del PDF
+                with pdfplumber.open(input_path) as pdf:
+                    text = ""
+                    for page in pdf.pages:
+                        text += (
+                            page.extract_text() + "\n\n"
+                        )  # Agregar salto de línea entre páginas
 
-            doc.save(output_path)
+                # Guardar el texto extraído en un archivo Markdown
+                with open(output_path, "w", encoding="utf-8") as md_file:
+                    md_file.write(text)
+
+                print(f"Archivo convertido y guardado: {output_path}")
+
+            except Exception as e:
+                # Manejo de errores
+                print(f"Error al procesar {filename}: {e}")
+
+
+if __name__ == "__main__":
+    convert_pdf_to_md()
