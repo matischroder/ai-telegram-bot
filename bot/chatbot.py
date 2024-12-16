@@ -1,19 +1,19 @@
 import os
 import openai
 
-from llama_index import (
-    load_index_from_storage,
+from llama_index.core import (
     StorageContext,
+    ServiceContext,
+    load_index_from_storage,
 )
-from llama_index.agent import OpenAIAgent
-from llama_index.llms import OpenAI, ChatMessage
-from llama_index.tools import QueryEngineTool
-from llama_index.query_engine import RetrieverQueryEngine
-from llama_index.vector_stores.faiss import FaissVectorStore
-from llama_index.retrievers import VectorIndexRetriever
-from llama_index.memory import ChatMemoryBuffer
+from llama_index.llms.openai import OpenAI
+from llama_index.core.query_engine import RetrieverQueryEngine
+from llama_index.core.retrievers import VectorIndexRetriever
+from llama_index.core.memory import ChatMemoryBuffer
+from llama_index.core.tools import QueryEngineTool
+from llama_index.agent.openai import OpenAIAgent
 
-
+# Configurar la clave de API de OpenAI
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 
@@ -22,47 +22,51 @@ class ChatBot:
         self,
         llm: OpenAI = OpenAI(temperature=0.1, model="gpt-3.5-turbo"),
     ) -> None:
-        # check if ./data/storage exists
-        if not os.path.exists("./data/storage"):
-            os.makedirs("./data/storage", exist_ok=True)
-        if not os.path.exists("./data/pdfs"):
-            os.makedirs("./data/pdfs", exist_ok=True)
-        if not os.path.exists("./data/latest"):
-            os.makedirs("./data/latest", exist_ok=True)
+        # Crear directorios necesarios si no existen
+        for directory in ["./data/storage", "./data/pdfs", "./data/latest"]:
+            os.makedirs(directory, exist_ok=True)
+
+        # Verificar si existe el almacenamiento persistente
         if not os.path.exists("./data/storage/docstore.json"):
             return
 
-        _storage_context = StorageContext.from_defaults(
-            persist_dir=f"./data/storage",
-        )
-        _index = load_index_from_storage(storage_context=_storage_context)
-        _memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
-        similarity_top_k = 5
-        _retriever = VectorIndexRetriever(
-            index=_index, similarity_top_k=similarity_top_k
-        )
+        # Crear contextos para el servicio y el almacenamiento
+        storage_context = StorageContext.from_defaults(persist_dir="./data/storage")
+        # service_context = ServiceContext.from_defaults(llm=llm)
 
-        _query_engine = RetrieverQueryEngine(retriever=_retriever)
-        query_engine_tool = QueryEngineTool.from_defaults(
-            query_engine=_query_engine,
-        )
+        # Cargar el índice desde el almacenamiento
+        index = load_index_from_storage(storage_context=storage_context)
 
-        _all_tools = [query_engine_tool]
+        # Configurar memoria del chat
+        memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
 
-        system_prompt = "Sos el asistente virtual un grupo de telegram que tiene como contexto un documento"
+        # Configurar el motor de recuperación
+        retriever = VectorIndexRetriever(index=index, similarity_top_k=5)
+        query_engine = RetrieverQueryEngine(retriever=retriever)
 
+        # Crear herramientas basadas en el motor de consulta
+        query_engine_tool = QueryEngineTool.from_defaults(query_engine=query_engine)
+        all_tools = [query_engine_tool]
+
+        # Configurar el prompt del sistema
+        system_prompt = "Sos el asistente virtual de un grupo de Telegram que tiene como contexto un documento."
+
+        # Crear el agente
         self._agent = OpenAIAgent.from_tools(
-            _all_tools,
+            tools=all_tools,
             llm=llm,
-            memory=_memory,
+            memory=memory,
             system_prompt=system_prompt,
+            # service_context=service_context,
         )
         self._chat_history = []
 
     def reset(self) -> None:
+        """Reinicia el historial de chat."""
         self._chat_history = []
 
-    def get_sources_url(self, source_nodes: []) -> []:
+    def get_sources_url(self, source_nodes: list) -> list:
+        """Obtiene las URLs de las fuentes del chat."""
         sources = []
         for source in source_nodes:
             metadata = source.node.metadata
@@ -73,9 +77,9 @@ class ChatBot:
         return sources
 
     def chat(self, input_text: str) -> object:
+        """Envía un mensaje al agente y retorna la respuesta."""
         try:
-            chat_history = self._chat_history
-            chat_history.append(ChatMessage(role="user", content=input_text))
+            self._chat_history.append({"role": "user", "content": input_text})
             response = self._agent.chat(input_text)
             sources = self.get_sources_url(response.source_nodes)
             print(sources)
