@@ -8,6 +8,8 @@ from bot.bot_logic import (
 )
 from telegram.ext import CommandHandler, Application, MessageHandler, filters
 
+os.environ["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1"
+
 TELEGRAM_API_TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
 
 
