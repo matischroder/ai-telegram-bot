@@ -10,7 +10,7 @@ from .train import train_bot
 from .query import query
 
 ai_bot = ChatBot()
-default_whitelist = ["elmatero", "jaimer0", "jinmv"]
+default_whitelist = ["elmatero"]
 
 # Enable logging
 logging.basicConfig(
